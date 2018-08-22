@@ -503,11 +503,11 @@ C      CLOSE (3)
 
 
       SUBROUTINE OUTPUT_RADS (NSTOKES, NUMMU, AZIORDER,
-     .                    SRC_CODE, LAYER_FILE, OUT_FILE,
+     .                    SRC_CODE, CLAYER_FILE, COUT_FILE,
      .                    QUAD_TYPE, DELTAM, DIRECT_FLUX, DIRECT_MU,
      .                    GROUND_TEMP, GROUND_TYPE,
      .                    GROUND_ALBEDO, GROUND_INDEX,
-     .                    SKY_TEMP, WAVELENGTH, UNITS, OUTPOL,
+     .                    SKY_TEMP, WAVELENGTH, UNITS, COUTPOL,
      .                    NUM_LAYERS, HEIGHT,
      .                    NOUTLEVELS, OUTLEVELS, NUMAZIMUTHS,
      .                    MU_VALUES, PHIVAL, UP_FLUX, DOWN_FLUX,
@@ -528,8 +528,10 @@ C      CLOSE (3)
       REAL*8   UP(NSTOKES, NUMMU, NUMAZIMUTHS, NOUTLEVELS)
       REAL*8   DOWN(NSTOKES, NUMMU, NUMAZIMUTHS, NOUTLEVELS)
       COMPLEX*16  GROUND_INDEX
-      CHARACTER*(*) LAYER_FILE, OUT_FILE
-      CHARACTER QUAD_TYPE*1, DELTAM*1, UNITS*1, OUTPOL*2, GROUND_TYPE*1
+      type(c_ptr), target, intent(in) :: CLAYER_FILE, COUT_FILE, COUTPOL
+      CHARACTER(len=64), pointer :: LAYER_FILE, OUT_FILE
+      CHARACTER(len=2), pointer :: OUTPOL
+      CHARACTER QUAD_TYPE*1, DELTAM*1, UNITS*1,  GROUND_TYPE*1
       CHARACTER*32 QUAD_NAME, UNITS_NAME, GROUND_NAME
       CHARACTER*64 FORM1
       INTEGER  I, J, K, L, LI, M, N
@@ -537,6 +539,12 @@ C      CLOSE (3)
       PARAMETER (PI=3.1415926535897932384D0)
       external CONVERT_OUTPUT
 
+      call c_f_pointer(COUT_FILE, OUT_FILE)
+      call c_f_pointer(CLAYER_FILE, LAYER_FILE)
+      call c_f_pointer(COUTPOL, OUTPOL)
+      
+      print *, OUT_FILE, LAYER_FILE, OUTPOL
+      
       N = NUMMU*(AZIORDER+1)*NOUTLEVELS
       CALL CONVERT_OUTPUT (UNITS, OUTPOL, NSTOKES, N, 
      .                     WAVELENGTH, 0, UP_RAD)
