@@ -543,7 +543,17 @@ C      CLOSE (3)
       call c_f_pointer(CLAYER_FILE, LAYER_FILE)
       call c_f_pointer(COUTPOL, OUTPOL)
       
-      print *, OUT_FILE, LAYER_FILE, OUTPOL
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       
       N = NUMMU*(AZIORDER+1)*NOUTLEVELS
       CALL CONVERT_OUTPUT (UNITS, OUTPOL, NSTOKES, N, 
